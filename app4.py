@@ -15,6 +15,7 @@ SUPABASE_KEY = st.secrets["SUPABASE_ANON_KEY"]
 # --- Streamlit UI 設定 ---
 st.set_page_config(page_title="ひびきチャット", layout="centered")
 st.markdown("<h1 style='text-align: center;'>🌸 ひびきとお話ししよう 🌸</h1>", unsafe_allow_html=True)
+st.sidebar.markdown(f"**ログイン中:** {st.session_state.user.email} (ID: {st.session_state.user.id})")
 
 # --- Supabase クライアントの初期化 ---
 @st.cache_resource
@@ -98,8 +99,10 @@ def init_langmem_tools(user_id):
     store.setup() # データベースにテーブルがなければ作成
 
     # ユーザーIDをLangMemのnamespaceに含める
-    manage_tool = create_manage_memory_tool(store=store, namespace=(user_id, "memories"))
-    search_tool = create_search_memory_tool(store=store, namespace=(user_id, "memories"))
+    current_namespace = (user_id, "memories")
+    st.sidebar.write(f"LangMem Namespace: `{current_namespace}`") # デバッグ用に追加
+    manage_tool = create_manage_memory_tool(store=store, namespace=current_namespace)
+    search_tool = create_search_memory_tool(store=store, namespace=current_namespace)
     st.session_state.langmem_initialized = True
     return manage_tool, search_tool, store_cm
 
@@ -126,6 +129,9 @@ def retrieve_memory_node(state: GraphState):
     user_input = state["input"]
     # LangMemのsearch_toolを使って記憶検索
     search_results = st.session_state.search_tool.invoke(user_input)
+
+    # デバッグ用に追加
+    st.session_state.debug_search_results = search_results
 
     # 検索結果の処理を改善
     memory_text = ""
@@ -245,6 +251,11 @@ if user_input:
     with st.expander("🔍 ひびきの思考過程（LLM2→LLM1）"):
         st.markdown("### ✉️ LLM2からの指示:")
         st.code(result.get("llm1_prompt_instructions", "なし"))
+
+# Streamlit UI の最下部など、デバッグ情報表示箇所に以下を追加
+if "debug_search_results" in st.session_state and st.session_state.debug_search_results:
+    with st.expander("🔍 デバッグ: 記憶検索結果 (Raw)"):
+        st.json(st.session_state.debug_search_results)
 
 # アプリ終了時にPostgresStoreのコネクションを閉じる
 # Streamlitでは難しいが、もし完全に制御できる環境であれば考慮
