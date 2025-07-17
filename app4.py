@@ -91,18 +91,17 @@ if st.sidebar.button("ログアウト"):
     sign_out()
 
 # --- LangMem + Postgres 初期化 (ユーザーログイン後) ---
-@st.cache_resource(hash_funcs={supabase.client.Client: lambda _: None}) # Supabaseクライアントをハッシュ化しない
+@st.cache_resource
 def init_langmem_tools(user_id):
     store_cm = PostgresStore.from_conn_string(POSTGRES_URL)
     store = store_cm.__enter__()
     store.setup() # データベースにテーブルがなければ作成
 
     # ユーザーIDをLangMemのnamespaceに含める
-    # 例: ("user_id_123", "memories")
     manage_tool = create_manage_memory_tool(store=store, namespace=(user_id, "memories"))
     search_tool = create_search_memory_tool(store=store, namespace=(user_id, "memories"))
     st.session_state.langmem_initialized = True
-    return manage_tool, search_tool, store_cm # store_cmも返して後で __exit__ を呼べるようにする
+    return manage_tool, search_tool, store_cm
 
 # ログインユーザーのIDでLangMemツールを初期化
 if not st.session_state.langmem_initialized:
