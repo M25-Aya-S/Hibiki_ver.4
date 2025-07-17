@@ -189,7 +189,7 @@ def chat_by_llm1_node(state: GraphState):
 ### ひびきの応答:
 """
     llm1 = ChatOpenAI(model="gpt-4o", temperature=0.7)
-    response = ll1.invoke(prompt)
+    response = llm1.invoke(prompt)
 
     # 記憶に保存（LangMem経由）
     # ユーザーの発言とひびきの応答をペアで記憶
