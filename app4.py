@@ -7,11 +7,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.graph import StateGraph, END
 
-
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 POSTGRES_URL = st.secrets["POSTGRES_URL"]
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
-SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+SUPABASE_ANON_KEY = st.secrets["SUPABASE_ANON_KEY"]
 
 # --- Streamlit UI 設定 ---
 st.set_page_config(page_title="ひびきチャット", layout="centered")
