@@ -15,7 +15,6 @@ SUPABASE_KEY = st.secrets["SUPABASE_ANON_KEY"]
 # --- Streamlit UI 設定 ---
 st.set_page_config(page_title="ひびきチャット", layout="centered")
 st.markdown("<h1 style='text-align: center;'>🌸 ひびきとお話ししよう 🌸</h1>", unsafe_allow_html=True)
-st.sidebar.markdown(f"**ログイン中:** {st.session_state.user.email} (ID: {st.session_state.user.id})")
 
 # --- Supabase クライアントの初期化 ---
 @st.cache_resource
@@ -87,9 +86,10 @@ if not st.session_state.user:
     st.stop() # ログインしていない場合はここで処理を停止
 
 # ログイン後のユーザー表示
-st.sidebar.markdown(f"**ログイン中:** {st.session_state.user.email}")
-if st.sidebar.button("ログアウト"):
-    sign_out()
+if st.session_state.user: 
+    st.sidebar.markdown(f"**ログイン中:** {st.session_state.user.email} (ID: `{st.session_state.user.id}`)")
+    if st.sidebar.button("ログアウト"):
+        sign_out()
 
 # --- LangMem + Postgres 初期化 (ユーザーログイン後) ---
 @st.cache_resource
