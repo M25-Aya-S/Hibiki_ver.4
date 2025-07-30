@@ -10,8 +10,8 @@ from streamlit_javascript import st_javascript
 import json
 import urllib.parse
 from dotenv import load_dotenv
-from langmem import create_manage_memory_tool, create_search_memory_tool
-from langgraph.store.postgres import PostgresStore
+# from langmem import create_manage_memory_tool, create_search_memory_tool
+# from langgraph.store.postgres import PostgresStore
 from langchain_openai import ChatOpenAI
 from langchain_core.documents import Document
 from langgraph.graph import StateGraph, END
@@ -19,7 +19,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 # --- 環境変数の読み込み（Streamlit Secrets） ---
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-POSTGRES_URL = st.secrets["POSTGRES_URL"]
+#POSTGRES_URL = st.secrets["POSTGRES_URL"]
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_ANON_KEY = st.secrets["SUPABASE_ANON_KEY"]
 APP_URL = st.secrets["APP_URL"]
